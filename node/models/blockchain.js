@@ -43,6 +43,17 @@ class Blockchain {
 		return hash.substr(0,this.difficulty) !== Array(this.difficulty + 1).join("0");
 	}
 	
+	mineBlock(hash,block){
+		while(hash.substr(0,this.difficulty) !== Array(this.difficulty + 1).join("0")){
+			block.nonce++;
+			hash = this.calculateHashForBlock(block);
+		}
+		
+		console.log("BLOCK MINED: " + this.hash);
+	}
+	
+	
+	
 	isValidNextBlock(newBlock, previousBlock){
 		let nextBlockHash = this.calculateHash(newBlock);
 		
