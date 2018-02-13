@@ -1,3 +1,5 @@
+const cryptoJS = require('crypto-js');
+
 class Block {
 	constructor(index, transactons, difficulty, prevBlockHash, minedBy, timestamp, blockHash, nonce){
 		this.index = index;
@@ -14,7 +16,7 @@ class Block {
 		
 		this.timestamp = timestamp;
 		
-		this.blockHash = blockHash;
+		this.blockHash = this.toHash();
 	}
 	
 	static get genesisBlock(){
@@ -29,6 +31,10 @@ class Block {
 			'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', // block hash
 			123, //nonce
 		); 
+	}
+	
+	toHash(){
+		return cryptoJS.SHA256(this.index + this.prevBlockHash + this.timestamp + this.transactions + this.nonce).toString();
 	}
 	
 	

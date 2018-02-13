@@ -31,9 +31,9 @@ class Blockchain {
 	}
 	
 	getBalanceOfAddress(address){
-		
 		let balance = 0;
-		for(let i = 0; i < this.blockchain.length; i++){
+		
+		for(let i = 0; i < this.blockchain.length; i++) {
 			for (let k = 0; k < this.blockchain[i].transactions.length; k++){
 				if(this.blockchain[i].transactions[k].to == address){
 					balance += this.blockchain[i].transactions[k].amount;
@@ -49,17 +49,6 @@ class Blockchain {
 	}
 	
 	/* end of blockchain info methods */
-	
-	
-	calculateHash(index, prevBlockHash, timestamp, transactions, nonce){
-		return cryptoJS.SHA256(index + prevBlockHash + timestamp + transactions + nonce).toString();
-	}
-	
-	calculateHashForBlock (block) {
-		const {index, prevBlockHash, timestamp, transactions, nonce} = block;
-		return this.calculateHash(index, prevBlockHash, timestamp, transactions, nonce);
-	}
-	
 	addBlock(newBlock){
 		if(this.isValidNextBlock(newBlock, this.getLatestBlock())){
 			this.blockchain.push(newBlock);
@@ -70,10 +59,11 @@ class Blockchain {
 		return hash.substr(0,this.difficulty) !== Array(this.difficulty + 1).join("0");
 	}
 	
-	mineBlock(hash,block){
+	mineBlock(block){
+		let hash = block.toHash();
 		while(hash.substr(0,this.difficulty) !== Array(this.difficulty + 1).join("0")){
 			block.nonce++;
-			hash = this.calculateHashForBlock(block);
+			hash = block.toHash();
 		}
 		
 		console.log("BLOCK MINED: " + hash);
@@ -87,11 +77,10 @@ class Blockchain {
 		let latestBlock = this.getLatestBlock();
 		let newIndex = latestBlock.index + 1;
 		let timestamp = Date.now();
-		let blockHash = this.calculateHash(newIndex + JSON.stringify(this.pendingTransactions) + this.difficulty + latestBlock.hash);
 		
-		let block = new Block(newIndex, this.pendingTransactions, this.difficulty, latestBlock.blockHash, miningAddress, timestamp, blockHash);
+		let block = new Block(newIndex, this.pendingTransactions, this.difficulty, latestBlock.blockHash, miningAddress, timestamp);
 
-		this.mineBlock(blockHash, block);
+		this.mineBlock(block);
 		
 		this.blockchain.push(block);
 		
@@ -104,16 +93,15 @@ class Blockchain {
 			amount : this.miningReward
 		}
 		
-		this.pendingTransactions.push(coinbaseTransaction); //will be added in next block
-		
+		this.pendingTransactions.push(coinbaseTransaction); //will be added in next block	
 	}
 	
 	isValidNextBlock(newBlock, previousBlock){
-		let nextBlockHash = this.calculateHashForBlock(newBlock);
+		let nextBlockHash = newBlock.toHash();
 		
 		if(newBlock.index !== (previousBlock.index + 1)){ //check index
 			return false;
-		} else if(previousBlock.blockHash !== newBlock.prevBlockHash){ //check for hash relations betwenn blocks
+		} else if(previousBlock.blockHash !== newBlock.prevBlockHash){ //check for hash relations between blocks
 			return false;
 		} else if(nextBlockHash !== newBlock.blockHash){
 			return false;
