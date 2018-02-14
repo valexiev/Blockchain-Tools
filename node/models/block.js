@@ -36,8 +36,6 @@ class Block {
 	toHash(){
 		return cryptoJS.SHA256(this.index + this.prevBlockHash + this.timestamp + this.transactions + this.nonce).toString();
 	}
-	
-	
 }
 
 module.exports = Block;

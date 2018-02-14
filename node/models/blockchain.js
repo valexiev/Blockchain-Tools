@@ -1,6 +1,6 @@
 const cryptoJS = require('crypto-js');
 const Block = require('./Block');
-const Transaction = require('./Transaction');
+const Transaction = require('./transaction');
 
 const process = require('process');
 
@@ -65,11 +65,10 @@ class Blockchain {
 			block.nonce++;
 			hash = block.toHash();
 		}
-		
-		console.log("BLOCK MINED: " + hash);
 	}
 	
-	createTransaction(transaction){
+	createTransaction(from, to, amount){
+		let transaction = new Transaction(from, to, amount);
 		this.pendingTransactions.push(transaction);
 	}
 	
@@ -87,11 +86,7 @@ class Blockchain {
 		this.pendingTransactions = []; // remove all pending transactions
 		
 		//create coinbase transaction
-		let coinbaseTransaction = {
-			from : null,
-			to : miningAddress,
-			amount : this.miningReward
-		}
+		let coinbaseTransaction = new Transaction(null, miningAddress, this.miningReward);
 		
 		this.pendingTransactions.push(coinbaseTransaction); //will be added in next block	
 	}
@@ -113,7 +108,6 @@ class Blockchain {
 	}
 	
 	isValidChain(chain){
-		
 		for(let i = 1; i < chain.length; i++){
 			if(!this.isValidNextBlock(chain[i],chain[i - 1])){ // check if some block is invalid
 				return false;
@@ -133,6 +127,5 @@ class Blockchain {
 		}
 	}
 }
-
 
 module.exports = Blockchain;
