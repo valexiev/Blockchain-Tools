@@ -1,17 +1,36 @@
-const _ = require('lodash');
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require('express')
+const bodyParser = require('body-parser')
 
-const port = process.env.PORT || '5000';
+const config = require('./config')
 
-var app = express();
-app.use(bodyParser.json());
+const Node = require('./models/Node')
+
+const port = process.env.PORT || config.port || '5000'
+const nodeURL = config.url + ':' + port
+
+var node = new Node(nodeURL, config.nodeName)
+node.addPeers(config.initialPeers)
+
+var app = express()
+app.use(bodyParser.json())
 
 
 // * * * API * * *
 
-app.listen(port, () => {
-  console.log(`Started up at port ${port}`);
+// NODES
+app.get('/info', (req, res) => {
+    var info = node.info()
+    res.json(info)
 });
 
-module.exports = {app};
+app.get('/peers', (req, res) => {
+    var info = node.getPeers()
+    res.json(info)
+});
+
+
+app.listen(port, () => {
+  console.log(`Started up at port ${port}`)
+});
+
+module.exports = {app}
