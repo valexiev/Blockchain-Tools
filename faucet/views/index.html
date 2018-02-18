@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title>Beer Faucet</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	</head>
+	
+	<body>
+		<div class="jumbotron">
+		  <div class="container">
+			<h1>Welcome to Beer faucet, <%= success %></h1>
+			<p>This faucet is for softuni blockchchain project. You can request 100 coins per hour, don't be greed we can't print money.</p>
+			<form method="post" action="/sendCoins" enctype="application/x-www-form-urlencoded">
+				<div class="form-group">
+					<label for="address">Your address : </label>
+					<input type="text" class="form-control" name="address" id="address" placeholder="Receiving address">
+					<small id="emailHelp" class="form-text text-muted">Use only testnet address</small>
+				  </div>
+				  <p><input class="btn btn-primary btn-lg" type="submit" value="Send me 100 test beers"/></p>
+			</form>
+			
+		  </div>
+		</div>
+		
+		<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		
+	</body>
+</html>

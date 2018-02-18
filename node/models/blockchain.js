@@ -85,7 +85,7 @@ class Blockchain {
 		
 		this.pendingTransactions = []; // remove all pending transactions
 		
-		//create coinbase transaction
+		// pay to miner in next block
 		let coinbaseTransaction = new Transaction(null, miningAddress, this.miningReward);
 		
 		this.pendingTransactions.push(coinbaseTransaction); //will be added in next block	
