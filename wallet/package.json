@@ -9,6 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bitcore-mnemonic": "^1.5.0",
+    "crypto": "^1.0.1",
+    "crypto-js": "^3.1.9-1",
+    "ed25519-supercop": "^1.0.2",
+    "pbkdf2": "^3.0.14",
     "ripemd160": "^2.0.1",
     "secp256k1": "^3.5.0"
   }
