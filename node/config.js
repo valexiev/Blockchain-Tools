@@ -1,6 +1,7 @@
 module.exports = {
     url: 'http://localhost',
-    port: 5000,
+    httpPort: 5001,
+    wsPort: 8001,
     nodeName: 'nodeName',
     initialPeers: []
 }
