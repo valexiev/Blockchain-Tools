@@ -1,15 +1,17 @@
-class Node {
+const EventEmitter = require('events');
+
+class Node extends EventEmitter {
 
     constructor(URL, name) {
         this.URL = URL
         this.name = name
-        this.nodes = []
+        this.peers = []
 	}
 
     info() {
         return {
             nodeName: this.name,
-            peersCount: this.nodes.length,
+            peersCount: this.peers.length,
             URL: this.URL
         }
     }
@@ -26,13 +28,8 @@ class Node {
                 })
             }
         })
-    }
 
-    removePeer(peerURL) {
-        const index = this.nodes.findIndex(node => node.url === peerURL)
-        if ( index > -1) {
-            this.nodes.splice(index, 1)
-        }
+        this.emit('AddPeers', newPeersURLs)
     }
 
     getPeers() {
