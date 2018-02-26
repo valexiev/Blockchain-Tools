@@ -23,7 +23,6 @@ class Wallet {
 		return this.secret;
 	}
 	
-	
 	generateMnemonic(){
 		let words = new Mnemonic(Mnemonic.Words.English);
 		return words.toString();
@@ -59,8 +58,6 @@ class Wallet {
 		
 		return newKeyPair.publicKey;
 	}
-	
-	
 	
 	static fromPassword(){
 		let wallet = new Wallet();
