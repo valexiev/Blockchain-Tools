@@ -11,10 +11,13 @@
   "dependencies": {
     "bitcore-mnemonic": "^1.5.0",
     "body-parser": "^1.18.2",
+    "bs58": "^4.0.1",
+    "buffer": "^5.1.0",
     "crypto": "^1.0.1",
     "crypto-js": "^3.1.9-1",
     "ed25519-supercop": "^1.0.2",
     "ejs": "^2.5.7",
+    "elliptic": "^6.4.0",
     "express": "^4.16.2",
     "pbkdf2": "^3.0.14",
     "ripemd160": "^2.0.1",
