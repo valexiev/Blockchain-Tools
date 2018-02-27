@@ -78,11 +78,11 @@ module.exports = function(port, blockchain, node) {
 	};
 
 	function write(ws, message) {
-		ws.send(JSON.stringify(message)
+		ws.send(JSON.stringify(message))
 	}
 
 	function broadcast(message) {
-		sockets.forEach(socket => write(socket, message)
+		sockets.forEach(socket => write(socket, message))
 	}
 
 	function broadcastBlock(block) {
