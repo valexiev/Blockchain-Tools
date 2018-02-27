@@ -4,6 +4,7 @@ const pbkdf2 = require('pbkdf2');
 const Mnemonic = require('bitcore-mnemonic');
 const cryptoUtil = require('../utils/cryptoUtils'); 
 const Transaction = require('../../node/models/transaction');
+const request = require('request');
 
 class Wallet {
 	constructor(){
@@ -12,6 +13,7 @@ class Wallet {
 		this.secret = null;
 		this.keyPairs = [];
 		this.mnemonic = null;
+		this.nodeUrl = "";
 	}
 	
 	generateSecret(){
@@ -68,11 +70,22 @@ class Wallet {
 	
 		let new_transaction = new Transaction(from.publicKey,to,amount);
 		
-		let signature = ed.sign("message",from.publicKey,from.secretKey).toString('hex');
+		let message = from.publicKey + "-" + to + "amount";
+		let signature = ed.sign(message, from.publicKey, from.secretKey).toString('hex');
 
-		let isValid = ed.verify(signature, "message" , from.publicKey);
-		return isValid;
+		let isValid = ed.verify(signature, message , from.publicKey);
+		
+		if(isValid){
+			//send to node
+			request.post(this.nodeUrl + "/transaction",{
+				json : { transaction : JSON.stringify(new_transaction) }
+			})
+		} else {
+			console.log('Transaction is not valid');
+		}
 	}
+
+
 	
 	static fromPassword(){
 		let wallet = new Wallet();
