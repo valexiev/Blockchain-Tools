@@ -82,16 +82,15 @@ class Wallet {
 		return '/keypairs/' + fileName + '.json';
 	}
 
-	createTransaction(to,amount,privateKey) {
-		this.generateAddress();
+	signTransaction(to,amount,privateKey) {
+		///this.generateAddress();
 		let lastKeyPairIndex = this.keyPairs.length;
 		let from = this.keyPairs[lastKeyPairIndex - 1];
 	
 		let message = from.publicKey + to + amount;
 		let signature = ed.sign(message, from.publicKey, privateKey).toString('hex');
 
-
-		return new Transaction(from.publicKey,to,amount,message,signature);
+		return signature;
 	}
 
 	sendTransaction(transaction){

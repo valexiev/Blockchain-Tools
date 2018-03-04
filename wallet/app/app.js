@@ -57,7 +57,7 @@ app.post('/sign', urlencodedParser, (req, res) => {
 	let privateKey = req.body.privateKey;
 	let amount = req.body.amount;
 
-	let signature = wallet.createTransaction(to, amount, privateKey).signature;
+	let signature = wallet.signTransaction(to, amount, privateKey);
 
 	if(req.body.action == 'send'){
 
@@ -65,10 +65,11 @@ app.post('/sign', urlencodedParser, (req, res) => {
 			from : from,
 			to : to,
 			signature : signature,
-			amount : amount
+			amount : amount,
+			message : from + to + amount
 		}
 
-		wallet.createTransaction(transaction);
+		wallet.sendTransaction(transaction);
 	}
 	
 	res.render(__dirname + '/templates/index.html', {
