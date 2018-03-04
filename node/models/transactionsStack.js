@@ -1,20 +1,25 @@
-
-class PendingTransactions() {
+class TransactionsStack {
 
 	constructor() {
-		this.pendingTransactions = {}
+		this.transactions = {}
 	}
 
 	getAllPending() {
-		return this.pendingTransactions
+		return this.transactions
+	}
+
+	draw() {
+		var tx = this.transactions
+		this.transactions = {}
+		return tx
 	}
 
 	addTx(tx) {
-		this.pendingTransactions[tx.hash] = tx
+		this.transactions[tx.hash] = tx
 	}
 
 	removeTx(tx) {
-		delete this.pendingTransactions[tx.hash]
+		delete this.transactions[tx.hash]
 	}
 
 	addTxArr(txArr) {
@@ -28,4 +33,4 @@ class PendingTransactions() {
 	// TODO: delete transactions that stay in the stack too long, e.g. more than 3 days
 }
 
-module.exports = new PendingTransactions();
+module.exports = TransactionsStack;

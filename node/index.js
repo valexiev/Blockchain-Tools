@@ -4,22 +4,26 @@ const config = require('./config')
 
 const Node = require('./models/node')
 const Blockchain = require('./models/blockchain')
+const TransactionsStack = require('./models/transactionsStack')
 
 const httpPort = process.env.PORT || config.httpPort || '5001'
 const wsPort = process.env.PORT || config.wsPort || '8001'
 const nodeURL = config.url + ':' + httpPort
+
+var pendingTransactions = new TransactionsStack()
 
 // Setup Node
 var node = new Node(nodeURL, config.nodeName)
 node.addPeers(config.initialPeers)
 
 // Setup Blockchain
-var blockchain = new Blockchain()
+var blockchain = new Blockchain(pendingTransactions)
 
 HttpServer({
 	port: httpPort,
 	blockchain,
-	node
+	node,
+	pendingTransactions
 })
 
 WsServer({
