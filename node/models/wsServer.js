@@ -1,4 +1,6 @@
 const WebSocket = require("ws")
+const express = require('express')
+
 
 const TOPICS = {
 	REQUEST_LATEST_BLOCK: 11,
@@ -10,10 +12,11 @@ const TOPICS = {
 	DELIVER_TX: 24,
 }
 
-module.exports = function({port, blockchain, node}) {
+
+module.exports = function({port, blockchain, node, pendingTransactions}) {
 
 	var sockets = []
-	
+
 	connectToPeers(node.getPeers())
 	node.on('AddPeers', connectToPeers)
 	// TODO: emit the event in blockchain
@@ -21,9 +24,12 @@ module.exports = function({port, blockchain, node}) {
 
 	function startServer() {
 
-		var server = new WebSocket.Server({port})
-		
-		server.on('connection', initConnection)
+		const server = express()
+		  .listen(port, () => console.log(`Listening on ${ port }`));
+
+		var wss = new WebSocket.Server({server})
+
+		wss.on('connection', initConnection)
 		console.log(`WS server started up at port ${port}`)
 	}
 
@@ -37,7 +43,7 @@ module.exports = function({port, blockchain, node}) {
 	}
 
 	function connectToPeers(newPeers) {
-		
+
 		newPeers.forEach((peer) => {
 			var ws = new WebSocket(peer)
 			ws.on('open', () => initConnection(ws))
