@@ -132,13 +132,38 @@ class Blockchain extends EventEmitter {
 		return true;
 	}
 
-	isChainLonger(chain){
+	isChainLonger(chain) {
 		return chain.length > this.blockchain.length;
 	}
 
-	replaceChain(newChain){
+	replaceChain(newChain) {
 		if(this.isValidChain(newChain) && isChainLonger(newChain)){
-			this.blockchain = chain;
+			var pendingTx = this.pendingTransactions.draw()
+
+			var newTxStack = newChain.reduce((stack, block) => {
+				block.getTransactions().forEach(tx => {
+					if (!pendingTx[tx.hash]) {
+						// Get only tx that are new for our stack
+						// The others are alredy written in the new chain
+						stack[tx.hash] = tx
+					}
+				})
+				return stack
+			}, {})
+
+			var pendingTxArr = this.blockchain.reduce((arr, block) => {
+				block.getTransactions().forEach(tx => {
+					if (!newTxStack[tx.hash]) {
+						// This tx is not included in the new chain, so it is pending
+						arr.push(tx)
+					}
+				})
+				return arr
+			}, [])
+
+			this.pendingTransactions.addTxArr(pendingTxArr)
+
+			this.blockchain = newChain;
 		}
 	}
 }
