@@ -1,15 +1,18 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const Transaction = require('./transaction');
 // const _ = require('lodash');
 
 
-
-module.exports = function({port, blockchain, node}) {
+module.exports = function({port, blockchain, node, pendingTransactions}) {
 
 	// Setup Express
 	var app = express()
 	app.use(bodyParser.json())
 
+	app.get('/', (req, res) => {
+		res.send('Mining');
+	})
 
 	// * * * API * * *
 
@@ -69,15 +72,21 @@ module.exports = function({port, blockchain, node}) {
 	// TRANSACTIONS
 
 	app.post('/transactions', (req, res) => {
-		// TODO: new transaction to be broadcasted
+		const tx = new Transaction(req.body.transaction)
+		if (tx.verifySignature()) {
+			pendingTransactions.addTx(tx)
+			res.json({hash: tx.toHash()})
+		} else {
+			res.send({error: true});
+		}
 	})
 
 	app.get('/transactions/:txHash', (req, res) => {
-		// TODO: return tx info
+		res.send(blockchain.getTx(req.params.txHash));
 	})
 
 	app.get('/balance/:addressHash', (req, res) => {
-		// TODO: return tx info
+		res.send(blockchain.getBalanceOfAddress(req.params.addressHash));
 	})
 
 	// MINING
