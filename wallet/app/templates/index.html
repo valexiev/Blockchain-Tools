@@ -23,6 +23,44 @@
 					<p class="text-center"><button type="submit" class="btn btn-primary">Make me wallet</button></p>
 				</form>
 			  </div> 
+
+			  <div class="jumbotron">
+			    <h1 class="text-center">Create new transaction</h1> 
+			    <form method="post" action="/sign" id="createTransaction" enctype="application/x-www-form-urlencoded">
+			    	<div class="error"></div>
+					
+					<div class="form-group">
+					   <label for="from">From address</label>
+					   <input type="text" readonly="readonly" class="form-control" name="from" id="addressFrom" value="<%=from %>">
+					</div>
+
+					<div class="form-group">
+					   <label for="addressTo">To address</label>
+					   <input type="text" class="form-control" name="addressTo" id="addressTo"value="<%=to %>">
+					</div>
+
+					<div class="form-group">
+					   <label for="privateKey">Private key</label>
+					   <input type="text" class="form-control" name="privateKey" id="privateKey" value="<%=privateKey %>"> 
+					</div>
+
+					<div class="form-group">
+					   <label for="amount">amount</label>
+					   <input type="text" value="<%= amount %>" class="form-control" name="amount" id="amount" >
+					</div>
+
+					<div class="form-group">
+					<label for="signature">Signature (autofill)</label>
+					<textarea class="form-control" disabled>
+						<%= signature %>
+					</textarea>
+					</div>
+					<p class="text-center">
+						<button type="submit" name="action" value="sign" class="btn btn-primary">Sign</button>
+						<button type="submit" name="action" value="send" class="btn btn-default">Send</button>
+					</p>
+				</form>
+			  </div> 
 			</div>
 		</div>
 		<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
