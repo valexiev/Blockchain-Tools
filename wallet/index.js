@@ -4,10 +4,8 @@ const ripemd160 = require('ripemd160');
 
 class Wallet {
 	ripemd160(text){
-		return new RIPEMD160().update(text).digest('hex');
+		return new ripemd160().update(text).digest('hex');
 	}
 }
 
 let wallet = new Wallet();
-
-console.log(Wallet.ripemd160('42'));

@@ -45,7 +45,7 @@ class Wallet {
 			this.generateSecret();
 		}
 		
-		let lastKeyPair = this.keyPairs[this.keyPairs.length - 1];
+		//let lastKeyPair = this.keyPairs[this.keyPairs.length - 1];
 		
 		//let seed = (lastKeyPair == null) ? this.secret : this.generateSecret();
 		let seed = ed.createSeed()
@@ -68,24 +68,15 @@ class Wallet {
 		let lastKeyPairIndex = this.keyPairs.length;
 		let from = this.keyPairs[lastKeyPairIndex - 1];
 	
-		let new_transaction = new Transaction(from.publicKey,to,amount);
-		
 		let message = from.publicKey + "-" + to + "amount";
 		let signature = ed.sign(message, from.publicKey, from.secretKey).toString('hex');
 
-		let isValid = ed.verify(signature, message , from.publicKey);
-		
-		if(isValid){
-			//send to node
-			request.post(this.nodeUrl + "/transaction",{
-				json : { transaction : JSON.stringify(new_transaction) }
-			})
-		} else {
-			console.log('Transaction is not valid');
-		}
+		return new Transaction(from.publicKey,to,amount,message,signature);
 	}
 
-
+	function sendTransaction(transaction){
+		// send post request to this.nodeUrl
+	}
 	
 	static fromPassword(){
 		let wallet = new Wallet();
@@ -95,7 +86,9 @@ class Wallet {
 	}
 }
 
-let wallet = new Wallet();
-wallet.password = "password";
-wallet.generateAddress();
-wallet.createTransaction("valio", 1);
+//let wallet = new Wallet();
+//wallet.password = "password";
+//wallet.generateAddress();
+//wallet.createTransaction("valio", 1);
+
+module.exports = Wallet;

@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
+
 app.set('views', path.join(__dirname, 'templates'))
 
 app.route('/')
@@ -16,9 +17,9 @@ app.route('/')
 		res.sendFile(__dirname + '/templates/index.html');
 	});
 
-app.post('/test',(req,res) => {
-   console.log(req.body);
-   console.log(req.params);
+app.post('/',urlencodedParser, (req,res) => {
+   console.log(req);
+   //console.log(req.params);
    res.send(JSON.stringify(req.body));
 });
 
