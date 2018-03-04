@@ -31,6 +31,18 @@ class Blockchain extends EventEmitter {
 		return this.pendingTransactions;
 	}
 
+	getTx(hash) {
+		this.blockchain.forEach(block => {
+			block.getTransactions().forEach(tx => {
+				if (tx.hash === hash) {
+					return tx
+				}
+			})
+		})
+
+		return false
+	}
+
 	getBalanceOfAddress(address){
 		let balance = 0;
 
@@ -50,19 +62,19 @@ class Blockchain extends EventEmitter {
 	}
 
 	/* end of blockchain info methods */
-	addBlock(newBlock){
-		if(this.isValidNextBlock(newBlock, this.getLatestBlock())){
+	addBlock(newBlock) {
+		if(this.isValidNextBlock(newBlock, this.getLatestBlock())) {
 			this.blockchain.push(newBlock);
 			return true
 		}
 		return false
 	}
 
-	isValidHashDifficulty(hash,block){
+	isValidHashDifficulty(hash,block) {
 		return hash.substr(0,this.difficulty) !== Array(this.difficulty + 1).join("0");
 	}
 
-	mineBlock(block){
+	mineBlock(block) {
 		let hash = block.toHash();
 		while(hash.substr(0,this.difficulty) !== Array(this.difficulty + 1).join("0")){
 			block.nonce++;
@@ -70,12 +82,12 @@ class Blockchain extends EventEmitter {
 		}
 	}
 
-	createTransaction(from, to, amount){
+	createTransaction(from, to, amount) {
 		let transaction = new Transaction(from, to, amount);
 		this.pendingTransactions.push(transaction);
 	}
 
-	minePendingTransactions(miningAddress){ // This method can be moved to miner
+	minePendingTransactions(miningAddress) { // This method can be moved to miner
 		let latestBlock = this.getLatestBlock();
 		let newIndex = latestBlock.index + 1;
 		let timestamp = Date.now();
@@ -94,7 +106,7 @@ class Blockchain extends EventEmitter {
 		this.pendingTransactions.push(coinbaseTransaction); //will be added in next block
 	}
 
-	isValidNextBlock(newBlock, previousBlock){
+	isValidNextBlock(newBlock, previousBlock) {
 		let nextBlockHash = newBlock.toHash();
 
 		if(newBlock.index !== (previousBlock.index + 1)){ //check index
@@ -110,7 +122,7 @@ class Blockchain extends EventEmitter {
 		}
 	}
 
-	isValidChain(chain){
+	isValidChain(chain) {
 		for(let i = 1; i < chain.length; i++){
 			if(!this.isValidNextBlock(chain[i],chain[i - 1])){ // check if some block is invalid
 				return false;
