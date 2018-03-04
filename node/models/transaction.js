@@ -3,21 +3,20 @@ const ed = require('ed25519-supercop')
 
 class Transaction {
 
-	constructor(from, to, amount, message, signature){
+	constructor({from, to, amount, signature}){
 		this.from = from;
 		this.to = to;
 		this.amount = amount;
 		this.hash = this.toHash();
-		this.message = message;
 		this.signature = signature;
 	}
 
 	toHash(){
-		return cryptoJS.SHA256(this.from + this.to + this.amount + this.message + this.signature).toString();
+		return cryptoJS.SHA256(this.from + this.to + this.amount + this.signature).toString();
 	}
 
 	verifySignature(){
-		return ed.verify(this.signature, this.message , this.from);
+		return ed.verify(this.signature, (this.from + this.to + this.amount), this.from);
 	}
 }
 module.exports = Transaction;
