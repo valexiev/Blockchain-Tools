@@ -1,12 +1,14 @@
 const cryptoJS = require('crypto-js');
 const Block = require('./block');
 const Transaction = require('./transaction');
+const EventEmitter = require('events');
 
 const process = require('process');
 
-class Blockchain {
+class Blockchain extends EventEmitter { 
 
 	constructor(){
+		super()
 		this.blockchain =  [Block.genesisBlock];
 		this.difficulty = 1;
 		this.pendingTransactions = [];

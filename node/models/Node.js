@@ -3,6 +3,7 @@ const EventEmitter = require('events');
 class Node extends EventEmitter {
 
     constructor(URL, name) {
+		super();
         this.URL = URL
         this.name = name
         this.peers = []
@@ -21,8 +22,8 @@ class Node extends EventEmitter {
 
     addPeers(newPeersURLs) {
         newPeersURLs.forEach(peerURL => {
-            if (this.nodes.find(node => node.url === peerURL)) {
-                this.nodes.push({
+            if (this.peers.find(node => node.url === peerURL)) {
+                this.peers.push({
                     url: peerURL,
                     addedAt: Date.now()
                 })
@@ -33,7 +34,7 @@ class Node extends EventEmitter {
     }
 
     getPeers() {
-        return this.nodes
+        return this.peers
     }
 
 

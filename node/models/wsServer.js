@@ -10,17 +10,19 @@ const TOPICS = {
 	DELIVER_TX: 24,
 }
 
-module.exports = function(port, blockchain, node) {
+module.exports = function({port, blockchain, node}) {
 
 	var sockets = []
-
+	
 	connectToPeers(node.getPeers())
 	node.on('AddPeers', connectToPeers)
 	// TODO: emit the event in blockchain
 	blockchain.on('MinedBlock', broadcastBlock)
 
 	function startServer() {
-		var server = new WebSocket.Server({port: port})
+
+		var server = new WebSocket.Server({port})
+		
 		server.on('connection', initConnection)
 		console.log(`WS server started up at port ${port}`)
 	}
@@ -35,6 +37,7 @@ module.exports = function(port, blockchain, node) {
 	}
 
 	function connectToPeers(newPeers) {
+		
 		newPeers.forEach((peer) => {
 			var ws = new WebSocket(peer)
 			ws.on('open', () => initConnection(ws))
