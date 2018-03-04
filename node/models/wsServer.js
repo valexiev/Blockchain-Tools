@@ -104,6 +104,14 @@ module.exports = function({port, blockchain, node, pendingTransactions}) {
 		broadcast(message)
 	}
 
+	function broadcastTx(tx) {
+		var message = {
+			topic: TOPICS.DELIVER_TX,
+			data: JSON.stringify(tx)
+		}
+		broadcast(message)
+	}
+
 	function responseLatestBlock() {
 		return {
 			topic: TOPICS.DELIVER_LATEST_BLOCK,
@@ -133,7 +141,7 @@ module.exports = function({port, blockchain, node, pendingTransactions}) {
 	}
 
 	function handleDeliveredTx(message) {
-		// TODO
+		pendingTransactions.addTx(JSON.parse(message.data))
 	}
 
 
