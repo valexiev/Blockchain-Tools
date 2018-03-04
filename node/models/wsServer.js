@@ -55,24 +55,26 @@ module.exports = function({port, blockchain, node, pendingTransactions}) {
 		ws.on('message', (data) => {
 			var message = JSON.parse(data)
 
-			console.log('Received message: ', data)
+			console.log('* Received message: ', data)
 
 			switch (message.topic) {
-				case REQUEST_LATEST_BLOCK:
+				case TOPICS.REQUEST_LATEST_BLOCK:
 					write(ws, responseLatestBlock())
-					break;
-				case DELIVER_LATEST_BLOCK:
+					break
+				case TOPICS.DELIVER_LATEST_BLOCK:
 					handleDeliveredBlock(message)
-					break;
-				case REQUEST_WHOLE_BLOCKCHAIN:
+					break
+				case TOPICS.REQUEST_WHOLE_BLOCKCHAIN:
 					write(ws, responseLatestBlockchain())
-					break;
-				case DELIVER_BLOCKCHAIN:
+					break
+				case TOPICS.DELIVER_BLOCKCHAIN:
 					handleDeliveredBlockchain(message)
-					break;
-				case DELIVER_TX:
+					break
+				case TOPICS.DELIVER_TX:
 					handleDeliveredTx(message)
-					break;
+					break
+				default:
+					return
 	        }
 	    })
 	}
