@@ -16,7 +16,7 @@ class Transaction {
 	}
 
 	verifySignature(){
-		return ed.verify(this.signature, (this.from + this.to + this.amount), this.from);
+		return this.from ? ed.verify(this.signature, (this.from + this.to + this.amount), this.from) : true;
 	}
 }
 module.exports = Transaction;
