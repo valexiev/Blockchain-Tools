@@ -6,12 +6,17 @@ const process = require('process');
 
 class Blockchain extends EventEmitter {
 
-	constructor(pendingTransactions){
+	constructor(pendingTransactions, miningAddress, faucetAddress) {
 		super()
-		this.blockchain =  [Block.genesisBlock];
-		this.difficulty = 1;
-		this.pendingTransactions = pendingTransactions;
-		this.miningReward = 12.5;
+		this.blockchain =  []
+		this.difficulty = 1
+		this.pendingTransactions = pendingTransactions
+		this.miningReward = 50
+		this.miningAddress = miningAddress
+
+		const faucetTx = new Transaction({from: 0, to: faucetAddress, amount: 99999, signature: 0})
+		this.pendingTransactions.addTx(faucetTx)
+		this.minePendingTransactions(true)
 	}
 
 	/* Blockchain info methods */
@@ -76,35 +81,55 @@ class Blockchain extends EventEmitter {
 
 	mineBlock(block) {
 		let hash = block.toHash();
-		while(hash.substr(0,this.difficulty) !== Array(this.difficulty + 1).join("0")){
+		while(hash.substr(0,this.difficulty) !== Array(this.difficulty + 1).join("0")) {
 			block.nonce++;
 			hash = block.toHash();
 		}
 	}
 
-	createTransaction(from, to, amount) {
-		let transaction = new Transaction(from, to, amount);
-		this.pendingTransactions.push(transaction);
-	}
+	// createTransaction(from, to, amount) {
+	// 	let transaction = new Transaction(from, to, amount);
+	// 	this.pendingTransactions.push(transaction);
+	// }
 
-	minePendingTransactions(miningAddress) { // This method can be moved to miner
-		let latestBlock = this.getLatestBlock();
-		let newIndex = latestBlock.index + 1;
+	minePendingTransactions(isGenesis) { // This method can be moved to miner
+		var latestBlockHash
+		var newIndex
+
+		if (isGenesis) {
+			latestBlockHash = 0
+			newIndex = 1
+		} else {
+			let latestBlock = this.getLatestBlock();
+			latestBlockHash = latestBlock.blockHash
+			newIndex = latestBlock.index + 1;
+		}
+
 		let timestamp = Date.now();
 
-		let block = new Block(newIndex, this.pendingTransactions, this.difficulty, latestBlock.blockHash, miningAddress, timestamp);
+		let block = new Block(newIndex, this.pendingTransactions.getAllPending(), this.difficulty, latestBlockHash, this.miningAddress, timestamp);
 
 		this.mineBlock(block);
 
 		this.blockchain.push(block);
 
-		this.pendingTransactions = []; // remove all pending transactions
+		this.pendingTransactions.draw(); // remove all pending transactions
 
 		// pay to miner in next block
-		let coinbaseTransaction = new Transaction(null, miningAddress, this.miningReward);
+		let coinbaseTransaction = new Transaction({from: 0, to: this.miningAddress, amount: this.miningReward, signature: 0});
 
-		this.pendingTransactions.push(coinbaseTransaction); //will be added in next block
+		this.pendingTransactions.addTx(coinbaseTransaction); //will be added in next block
+
+		this.emit('MinedBlock', block)
 	}
+
+	startMining() {
+		// TODO: difficulty adjustment algorythm
+		setInterval(() => {
+			this.minePendingTransactions()
+		}, 10 * 1000);
+	}
+
 
 	isValidNextBlock(newBlock, previousBlock) {
 		let nextBlockHash = newBlock.toHash();

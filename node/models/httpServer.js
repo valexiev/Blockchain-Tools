@@ -83,8 +83,9 @@ module.exports = function({port, blockchain, node, pendingTransactions}) {
 	})
 
 	// MINING
-	app.post('/mining', (req, res) => {
-		// TODO: submit new mined block
+	app.get('/mining', (req, res) => {
+		blockchain.startMining()
+		res.send(true)
 	})
 
 

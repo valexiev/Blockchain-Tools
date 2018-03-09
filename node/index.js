@@ -17,7 +17,7 @@ var node = new Node(nodeURL, config.nodeName)
 node.addPeers(config.initialPeers)
 
 // Setup Blockchain
-var blockchain = new Blockchain(pendingTransactions)
+var blockchain = new Blockchain(pendingTransactions, config.miningAddress, config.faucetAddress)
 
 HttpServer({
 	port: httpPort,
