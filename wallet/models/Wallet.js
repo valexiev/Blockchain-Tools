@@ -1,15 +1,12 @@
-//const cryptoJS = require('crypto-js');
-const crypto = require('crypto');
+//const crypto = require('crypto');
 const ed = require('ed25519-supercop');
-const EC = require('elliptic').ec;
-const ec = new EC('secp256k1');
+//const EC = require('elliptic').ec;
+//const ec = new EC('secp256k1');
 const pbkdf2 = require('pbkdf2');
 const Mnemonic = require('bitcore-mnemonic');
-const cryptoUtil = require('../utils/cryptoUtils'); 
-const Transaction = require('../../node/models/transaction');
+const cryptoUtil = require('../utils/cryptoUtils');
 const request = require('request');
 const fs = require('fs');
-const http = require('http');
 
 class Wallet {
 	constructor(password){
@@ -97,17 +94,18 @@ class Wallet {
 		// send post request to this.nodeUrl
 		// http://192.168.87.96:5001/
 
-		request.post('http://192.168.87.96:5001/transactions', { json: { transaction: transaction } },
+		request.post('http://192.168.88.253:5001/transactions', { json: { transaction: transaction } },
 	    	function (error, response, body) {
+	    		debugger;
 		        if (!error && response.statusCode == 200) {
 		            console.log(body);
+		        } else {
+		        	console.log("* error " + error);
 		        }
+
+
 		    }
 		);
-
-	}
-
-	walletFromPrivateKey(privateKey){
 
 	}
 	
