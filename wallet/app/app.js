@@ -52,6 +52,7 @@ app.post('/',urlencodedParser, (req,res) => {
 });
 
 app.post('/sign', urlencodedParser, (req, res) => {
+	console.log("* sign method");
 	let from = req.body.from;
 	let to = req.body.addressTo;
 	let privateKey = req.body.privateKey;
@@ -60,11 +61,17 @@ app.post('/sign', urlencodedParser, (req, res) => {
 	let signature = wallet.signTransaction(to, amount, privateKey);
 
 	if(req.body.action == 'send'){
-
+		console.log("* send transaction");
+		
+		console.log("from" + from);
+		console.log("to" + from);
+		console.log("privateKey" + from);
+		console.log("amount" + from);
+		
 		let transaction = {
 			from : from,
-			to : to,
-			signature : signature,
+			to: to,
+			signature : signature;
 			amount : amount,
 			message : from + to + amount
 		}
