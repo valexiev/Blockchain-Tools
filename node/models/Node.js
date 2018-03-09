@@ -1,5 +1,6 @@
 const EventEmitter = require('events');
 
+
 class Node extends EventEmitter {
 
     constructor(URL, name) {
@@ -39,5 +40,6 @@ class Node extends EventEmitter {
 
 
 }
+
 
 module.exports = Node

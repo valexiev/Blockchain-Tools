@@ -61,13 +61,6 @@ module.exports = function({port, blockchain, node, pendingTransactions}) {
 	    res.json(chain)
 	})
 
-	// app.get('/blocks/:startId/:endId', (req, res) => {
-	//     // Return part of the chain
-	//     const chain = blockchain.getChain()
-	//     // TODO:
-	//     res.json()
-	// })
-
 
 	// TRANSACTIONS
 

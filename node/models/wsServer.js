@@ -19,7 +19,7 @@ module.exports = function({port, blockchain, node, pendingTransactions}) {
 
 	connectToPeers(node.getPeers())
 	node.on('AddPeers', connectToPeers)
-	// TODO: emit the event in blockchain
+
 	blockchain.on('MinedBlock', broadcastBlock)
 
 	function startServer() {
@@ -97,6 +97,7 @@ module.exports = function({port, blockchain, node, pendingTransactions}) {
 	}
 
 	function broadcastBlock(block) {
+		console.log(block)
 		var message = {
 			topic: TOPICS.DELIVER_LATEST_BLOCK,
 			data: JSON.stringify(block)

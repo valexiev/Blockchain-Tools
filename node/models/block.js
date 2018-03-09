@@ -1,7 +1,8 @@
 const cryptoJS = require('crypto-js');
 
 class Block {
-	constructor(index, transactons, difficulty, prevBlockHash, minedBy, timestamp, blockHash, nonce){
+	constructor(index, transactons, difficulty, prevBlockHash, minedBy, timestamp, blockHash, nonce) {
+
 		this.index = index;
 		//array of transactons
 		this.transactions = transactons;
