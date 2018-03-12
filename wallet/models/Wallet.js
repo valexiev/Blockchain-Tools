@@ -1,7 +1,4 @@
-//const crypto = require('crypto');
 const ed = require('ed25519-supercop');
-//const EC = require('elliptic').ec;
-//const ec = new EC('secp256k1');
 const pbkdf2 = require('pbkdf2');
 const Mnemonic = require('bitcore-mnemonic');
 const cryptoUtil = require('../utils/cryptoUtils');
